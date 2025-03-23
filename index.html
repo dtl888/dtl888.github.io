@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字组合查找</title>
+</head>
+
+<body>
+    <label for="sumValue">请输入和值(15~165)：</label>
+    <input type="number" id="sumValue" value="107">
+    <label for="requiredNumbers">请输入必出数字（用逗号分隔）：</label>
+    <input type="text" id="requiredNumbers" value="02,09,20">
+    <button onclick="findCombinations()">查找组合</button>
+    <pre id="result"></pre>
+
+    <script>
+        function findCombinations() {
+            const sum = parseInt(document.getElementById('sumValue').value);
+            const requiredNumbersInput = document.getElementById('requiredNumbers').value;
+            const requiredNumbers = requiredNumbersInput.split(',')
+               .map(num => parseInt(num.trim()))
+               .filter(num =>!isNaN(num));
+
+            const resultElement = document.getElementById('result');
+
+            const allValidCombinations = [];
+
+            // 生成所有满足和值条件的组合
+            for (let num1 = 1; num1 <= 35; num1++) {
+                for (let num2 = num1 + 1; num2 <= 35; num2++) {
+                    for (let num3 = num2 + 1; num3 <= 35; num3++) {
+                        for (let num4 = num3 + 1; num4 <= 35; num4++) {
+                            for (let num5 = num4 + 1; num5 <= 35; num5++) {
+                                if (num1 + num2 + num3 + num4 + num5 === sum) {
+                                    allValidCombinations.push([num1, num2, num3, num4, num5]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 筛选出包含所有必出数字的组合
+            const filteredCombinations = allValidCombinations.filter(combination => {
+                // 检查是否包含所有必出数字
+                return requiredNumbers.every(num => combination.includes(num));
+            });
+
+            // 对每个组合内的数字进行排序
+            const sortedInner = filteredCombinations.map(comb => comb.slice().sort((a, b) => a - b));
+
+            // 去重
+            const uniqueCombinations = [];
+            const set = new Set();
+            sortedInner.forEach(comb => {
+                const key = comb.join('-');
+                if (!set.has(key)) {
+                    set.add(key);
+                    uniqueCombinations.push(comb);
+                }
+            });
+
+            // 对去重后的组合按字典序排序
+            const finalSortedCombinations = uniqueCombinations.sort((a, b) => {
+                for (let i = 0; i < a.length; i++) {
+                    if (a[i]!== b[i]) {
+                        return a[i] - b[i];
+                    }
+                }
+                return 0;
+            });
+
+            if (finalSortedCombinations.length > 0) {
+                let resultText = "找到以下组合：\n";
+                finalSortedCombinations.forEach((combination, index) => {
+                    resultText += `${index + 1}. ${combination.join(', ')}\n`;
+                });
+                resultElement.textContent = resultText;
+            } else {
+                resultElement.textContent = '未找到符合条件的组合。';
+            }
+        }
+    </script>
+</body>
+
+</html>

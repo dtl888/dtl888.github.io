@@ -5,17 +5,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数字组合查找</title>
+    <style type="text/css">
+    	.new1{
+        	visibility: hidden;
+        }
+        .biaodanDivtishi{
+        	display: none;
+        	color: red;
+        	font-size:14px ;
+        }
+    </style>
 </head>
 
 <body>
-    <label for="sumValue">请输入和值(15~165)：</label>
-    <input type="number" id="sumValue" value="107">
-    <label for="requiredNumbers">请输入必出数字（用逗号分隔）：</label>
-    <input type="text" id="requiredNumbers" value="02,09,20">
-    <button onclick="findCombinations()">查找组合</button>
-    <pre id="result"></pre>
+	<div class='biaodan'>
+		<input type="text" placeholder="请输入验证码" class='biaodanInput1'/>
+		<button class='biaodanButton1'>提交</button>
+		<div class='biaodanDivtishi'>请输入有效验证码</div>
+	</div>
+	
+    <label for="sumValue" class='new1' >请输入和值(15~165)：</label>
+    <input type="number" id="sumValue" value="107" class='new1' >
+    <label for="requiredNumbers" class='new1' >请输入必出数字（用逗号分隔）：</label>
+    <input type="text" id="requiredNumbers" value="02,09,20" class='new1' >
+    <button onclick="findCombinations()" class='new1' >查找组合</button>
+    <pre id="result" class='new1' ></pre>
 
     <script>
+    	
+    	function calculateDateProduct() {
+            // 获取今天的日期
+            const today = new Date();
+            // 获取明天的日期，通过将今天的日期加上一天的毫秒数（1000 * 60 * 60 * 24）得到
+            const tomorrow = new Date(today.getTime() + 1000 * 60 * 60 * 24);
+            // 获取后天的日期，通过将今天的日期加上两天的毫秒数得到
+            const theDayAfterTomorrow = new Date(today.getTime() + 1000 * 60 * 60 * 24 * 2);
+
+            // 定义一个函数，将日期格式化为指定的数字格式，例如250325（去掉年份前两位20）
+            function formatDate(date) {
+                const year = date.getFullYear().toString().slice(2);
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return parseInt(year + month + day);
+            }
+
+            // 格式化今天、明天和后天的日期
+            const todayFormatted = formatDate(today);
+            const tomorrowFormatted = formatDate(tomorrow);
+            const theDayAfterTomorrowFormatted = formatDate(theDayAfterTomorrow);
+
+            // 计算三天日期的乘积
+            const product = todayFormatted * tomorrowFormatted * theDayAfterTomorrowFormatted;
+
+            // 取乘积的后6位
+            const lastSixDigits = product % 1000000;
+
+            // 在控制台输出结果
+//          console.log('今天的日期（格式化）：', todayFormatted);
+//          console.log('明天的日期（格式化）：', tomorrowFormatted);
+//          console.log('后天的日期（格式化）：', theDayAfterTomorrowFormatted);
+//          console.log('三天日期的乘积（取后6位）：', lastSixDigits);
+            
+            
+           var Allclass_duoge=document.querySelectorAll('.new1');
+           var  biaodan1=document.querySelectorAll('.biaodan')[0];
+           var  biaodanButton1=document.querySelectorAll('.biaodanButton1')[0];
+           var  biaodanInput1=document.querySelectorAll('.biaodanInput1')[0];
+           var  biaodanDivtishi=document.querySelectorAll('.biaodanDivtishi')[0];
+           biaodanInput1.value='';
+           biaodanButton1.addEventListener('click', function(){
+//          	console.log('你输入的值为：',biaodanInput1.value);
+            
+            	if(biaodanInput1.value==lastSixDigits){
+            		
+//          	  console.log('验证成功');
+            	  biaodan1.style.display='none';
+            	  Allclass_duoge.forEach(function(e, i){
+//          	  	console.log(e);
+            	  	e.style.visibility='visible';
+            	  });
+            	}else{
+            		biaodanDivtishi.style.display='block';
+            	}
+            });
+            
+            
+            return lastSixDigits;
+        }
+
+        // 调用函数进行计算
+        calculateDateProduct();
+    	
+    	
+    	
+    	//大乐透允许断区
         function findCombinations() {
             const sum = parseInt(document.getElementById('sumValue').value);
             const requiredNumbersInput = document.getElementById('requiredNumbers').value;
@@ -85,4 +168,4 @@
     </script>
 </body>
 
-</html>
+</html>    
